@@ -58,5 +58,9 @@ def ptile(img, S0):
 
 
 
-"ptile(sample1, 100 * 100)"
+"""
 ptile(sample1, 450*400)
+ptile(sample2, 240*240)
+ptile(sample3, 100*100)
+"""
+
