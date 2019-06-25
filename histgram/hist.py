@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 sample1 = cv2.imread("samples 2/sample1.pgm", 0)
 sample2 = cv2.imread("samples 2/sample2.pgm", 0)
 sample3 = cv2.imread("samples 2/sample3.pgm", 0)
+sample4 = cv2.imread("samples 2/sample4.pgm", 0)
 saturn = cv2.imread("samples 2/saturn.jpg", 0)
 hist = cv2.calcHist([sample1], [0], None, [256], [0, 256])
 
@@ -68,5 +69,6 @@ def ptile(img, S0, n0 = 0, threshold = 0):
 ptile(sample1, 450*400)
 ptile(sample2, 240*240)
 ptile(sample3, 100*100)
-"""
+ptile(sample4, 700*900)
 ptile(saturn, 200*200)
+"""
