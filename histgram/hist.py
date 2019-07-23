@@ -80,35 +80,27 @@ def calc_link_points(img_binary):
     for line, lines in enumerate(img_binary):
         for i, binary in enumerate(lines):
             if binary and not ori_binary[line][i]:
-                links4(img_binary, ori_binary, line, i)
+                ori_binary = links4(img_binary, ori_binary, line, i)
                 count += 1
+                print(count)
     print(count)
+
 
 def links4(img_binary, ori_binary, line, i):
     ori_binary[line][i] = True
-    print("loop")
-    print(ori_binary[line][i])
     if i > 0:
         if img_binary[line][i - 1] and not ori_binary[line][i - 1]:
-            print("ueadfadsfsa")
-            print(img_binary[line][i - 1] and not ori_binary[line][i - 1])
-            links4(img_binary, ori_binary, line, i - 1)
+            ori_binary = links4(img_binary, ori_binary, line, i - 1)
     if line > 0:
         if img_binary[line - 1][i] and not ori_binary[line - 1][i]:
-            print("左")
-            print(img_binary[line - 1][i] and not ori_binary[line - 1][i])
-            links4(img_binary, ori_binary, line - 1, i)
+            ori_binary = links4(img_binary, ori_binary, line - 1, i)
     if i < len(img_binary[0]) - 1:
         if img_binary[line][i + 1] and not ori_binary[line][i + 1]:
-            print("ヒラリー")
-            print(img_binary[line][i + 1] and not ori_binary[line][i + 1])
-            links4(img_binary, ori_binary, line, i + 1)
+            ori_binary = links4(img_binary, ori_binary, line, i + 1)
     if line < len(img_binary) - 1:
         if img_binary[line + 1][i] and not ori_binary[line + 1][i]:
-            print("クリクリクリントン")
-            print(img_binary[line + 1][i] and not ori_binary[line + 1][i])
-            links4(img_binary, ori_binary, line + 1, i)
-
+            ori_binary = links4(img_binary, ori_binary, line + 1, i)
+    return ori_binary
 
 """
 ptile(sample1, 450*400)
@@ -118,4 +110,4 @@ ptile(sample4, 700*900)
 ptile(saturn, 200*200)
 """
 
-calc_link_points(ptile(sample1, 450 * 400))
+calc_link_points(ptile(sample2, 240*240))
