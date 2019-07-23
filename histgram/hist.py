@@ -74,32 +74,49 @@ def ptile(img, S0, n0=0, threshold=0):
     return img_to_binary(img, threshold)
 
 
-def calc_link_points(img_binary):
+def calc_link_points(img_binary, links8=False):
+    """
+    :param img_binary:
+    :param links8: 何も入れなければ４連結
+    :return: count
+    """
     count = 0
     ori_binary = [[False for i in range(len(img_binary[0]))] for j in range(len(img_binary))]
     for line, lines in enumerate(img_binary):
         for i, binary in enumerate(lines):
             if binary and not ori_binary[line][i]:
-                ori_binary = links4(img_binary, ori_binary, line, i)
+                ori_binary = links(img_binary, ori_binary, line, i, links8)
                 count += 1
-                print(count)
-    print(count)
+    return count
 
 
-def links4(img_binary, ori_binary, line, i):
+def links(img_binary, ori_binary, line, i ,links8):
     ori_binary[line][i] = True
     if i > 0:
         if img_binary[line][i - 1] and not ori_binary[line][i - 1]:
-            ori_binary = links4(img_binary, ori_binary, line, i - 1)
+            ori_binary = links(img_binary, ori_binary, line, i - 1, links8)
     if line > 0:
         if img_binary[line - 1][i] and not ori_binary[line - 1][i]:
-            ori_binary = links4(img_binary, ori_binary, line - 1, i)
+            ori_binary = links(img_binary, ori_binary, line - 1, i, links8)
     if i < len(img_binary[0]) - 1:
         if img_binary[line][i + 1] and not ori_binary[line][i + 1]:
-            ori_binary = links4(img_binary, ori_binary, line, i + 1)
+            ori_binary = links(img_binary, ori_binary, line, i + 1, links8)
     if line < len(img_binary) - 1:
         if img_binary[line + 1][i] and not ori_binary[line + 1][i]:
-            ori_binary = links4(img_binary, ori_binary, line + 1, i)
+            ori_binary = links(img_binary, ori_binary, line + 1, i, links8)
+    if links8:
+        if line > 0 and i > 0:
+            if img_binary[line - 1][i - 1] and not ori_binary[line - 1][i - 1]:
+                ori_binary = links(img_binary, ori_binary, line - 1, i - 1, links8)
+        if line > 0 and i < len(img_binary[0]) - 1:
+            if img_binary[line - 1][i + 1] and not ori_binary[line - 1][i + 1]:
+                ori_binary = links(img_binary, ori_binary, line - 1, i + 1, links8)
+        if line < len(img_binary) - 1 and i > 0:
+            if img_binary[line + 1][i - 1] and not ori_binary[line + 1][i - 1]:
+                ori_binary = links(img_binary, ori_binary, line + 1, i - 1, links8)
+        if line < len(img_binary) - 1 and i < len(img_binary[0]) - 1:
+            if img_binary[line + 1][i + 1] and not ori_binary[line + 1][i + 1]:
+                ori_binary = links(img_binary, ori_binary, line + 1, i + 1, links8)
     return ori_binary
 
 """
@@ -110,4 +127,4 @@ ptile(sample4, 700*900)
 ptile(saturn, 200*200)
 """
 
-calc_link_points(ptile(sample2, 240*240))
+print(calc_link_points(ptile(sample1, 450*400), True))
