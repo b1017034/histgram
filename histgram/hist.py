@@ -1,5 +1,7 @@
 import cv2
 from matplotlib import pyplot as plt
+import sys
+sys.setrecursionlimit(1000000)
 
 sample1 = cv2.imread("samples 2/sample1.pgm", 0)
 sample2 = cv2.imread("samples 2/sample2.pgm", 0)
@@ -8,21 +10,26 @@ sample4 = cv2.imread("samples 2/sample4.pgm", 0)
 saturn = cv2.imread("samples 2/saturn.jpg", 0)
 hist = cv2.calcHist([sample1], [0], None, [256], [0, 256])
 
+
 def calc_hist(img):
-    hist_array= [0] * 256
+    hist_array = [0] * 256
     for width in img:
         for value in width:
             hist_array[value] += 1
 
-    return  hist_array
+    return hist_array
+
 
 "これはいらない"
+
+
 def plot_t():
     x = range(0, 256)
     y = calc_hist(sample1)
     plt.plot(x, y)
     plt.fill_between(x, y, 0, facecolor='b', alpha=1)
     plt.show()
+
 
 def img_to_binary(img, threshold):
     """
@@ -36,13 +43,16 @@ def img_to_binary(img, threshold):
     plt.imshow(img_binary, cmap='gray')
     plt.show()
 
-def ptile(img, S0, n0 = 0, threshold = 0):
+    return img_binary
+
+
+def ptile(img, S0, n0=0, threshold=0):
     """
     :param img: [][]    imreadで読み込んだ画像
     :param  S0: (px) * (px) 切り取る面積
     :param  n0: 切り取られない面積
     :param threshold: int 閾値
-    :return: none
+    :return: img_binary
     """
 
     "入力画像の面積"
@@ -61,8 +71,43 @@ def ptile(img, S0, n0 = 0, threshold = 0):
             threshold = index
             break
 
-    img_to_binary(img, threshold)
+    return img_to_binary(img, threshold)
 
+
+def calc_link_points(img_binary):
+    count = 0
+    ori_binary = [[False for i in range(len(img_binary[0]))] for j in range(len(img_binary))]
+    for line, lines in enumerate(img_binary):
+        for i, binary in enumerate(lines):
+            if binary and not ori_binary[line][i]:
+                links4(img_binary, ori_binary, line, i)
+                count += 1
+    print(count)
+
+def links4(img_binary, ori_binary, line, i):
+    ori_binary[line][i] = True
+    print("loop")
+    print(ori_binary[line][i])
+    if i > 0:
+        if img_binary[line][i - 1] and not ori_binary[line][i - 1]:
+            print("ueadfadsfsa")
+            print(img_binary[line][i - 1] and not ori_binary[line][i - 1])
+            links4(img_binary, ori_binary, line, i - 1)
+    if line > 0:
+        if img_binary[line - 1][i] and not ori_binary[line - 1][i]:
+            print("左")
+            print(img_binary[line - 1][i] and not ori_binary[line - 1][i])
+            links4(img_binary, ori_binary, line - 1, i)
+    if i < len(img_binary[0]) - 1:
+        if img_binary[line][i + 1] and not ori_binary[line][i + 1]:
+            print("ヒラリー")
+            print(img_binary[line][i + 1] and not ori_binary[line][i + 1])
+            links4(img_binary, ori_binary, line, i + 1)
+    if line < len(img_binary) - 1:
+        if img_binary[line + 1][i] and not ori_binary[line + 1][i]:
+            print("クリクリクリントン")
+            print(img_binary[line + 1][i] and not ori_binary[line + 1][i])
+            links4(img_binary, ori_binary, line + 1, i)
 
 
 """
@@ -72,3 +117,5 @@ ptile(sample3, 100*100)
 ptile(sample4, 700*900)
 ptile(saturn, 200*200)
 """
+
+calc_link_points(ptile(sample1, 450 * 400))
