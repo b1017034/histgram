@@ -90,7 +90,7 @@ def calc_link_points(img_binary, links8=False):
     return count
 
 
-def links(img_binary, ori_binary, line, i ,links8):
+def links(img_binary, ori_binary, line, i, links8):
     ori_binary[line][i] = True
     if i > 0:
         if img_binary[line][i - 1] and not ori_binary[line][i - 1]:
